@@ -18,6 +18,7 @@ class AdminManager:
         self.table.insert({
             "username": username,
             "password": bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
+            "creator": None,
             "created_at": time(),
             "updated_at": time()
         })
@@ -41,4 +42,20 @@ class AdminManager:
                 "iss": self.vertex,
                 "aud": self.vertex
             }, key=self.jwt_signing_key, algorithm="HS256")
+        }
+    
+    def get(self, username: str) -> Dict:
+        query = Query()
+        admin = self.table.get(query.username == username)
+        if not admin:
+            raise Exception(f"Admin {username} not found")
+        return self.to_dict(username)
+
+    @staticmethod
+    def to_dict(self) -> Dict:
+        return {
+            "username": self["username"],
+            "creator": self["creator"],
+            "created_at": self["created_at"],
+            "updated_at": self["updated_at"]
         }

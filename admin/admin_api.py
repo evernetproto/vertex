@@ -22,3 +22,8 @@ class AdminApi:
                 required_param("username"),
                 required_param("password")
             )
+
+        @self.app.get("/api/v1/admins/current")
+        @authenticate_admin
+        def get_current_admin_details(admin):
+            return self.manager.get(admin["username"])
