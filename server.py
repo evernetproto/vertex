@@ -2,13 +2,19 @@ from flask import Flask, request, g
 from dotenv import load_dotenv
 import os
 from health.health_api import HealthApi
+from tinydb import TinyDB
 
 load_dotenv()
 
-app = Flask(__name__)
 jwt_signing_key = os.getenv("JWT_SIGNING_KEY")
 vertex = os.getenv("VERTEX")
 vertex_description = os.getenv("VERTEX_DESCRIPTION")
+data_path = os.getenv("DATA_PATH")
+if not os.path.exists(data_path):
+    os.makedirs(data_path)
+
+app = Flask(__name__)
+db = TinyDB(os.path.join(data_path, "vertex.json"))
 
 HealthApi(app, vertex_description).register()
 
