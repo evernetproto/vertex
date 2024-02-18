@@ -24,3 +24,7 @@ class NodeApi:
         @self.app.get("/api/v1/nodes")
         def list_nodes():
             return self.manager.list()
+
+        @self.app.get("/api/v1/nodes/<identifier>")
+        def get_node(identifier):
+            return self.manager.get(identifier)

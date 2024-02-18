@@ -40,8 +40,12 @@ class NodeManager:
             results.append(self.to_dict(node))
         return results
 
-    def get():
-        pass
+    def get(self, identifier: str) -> Dict:
+        query = Query()
+        node = self.table.get(query.identifier == identifier)
+        if not node:
+            raise Exception(f"Node {identifier} not found")
+        return self.to_dict(node)
 
     def update():
         pass
