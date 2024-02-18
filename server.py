@@ -1,7 +1,9 @@
 from flask import Flask, request, g
 from dotenv import load_dotenv
 import os
+from admin.admin_manager import AdminManager
 from health.health_api import HealthApi
+from admin.admin_api import AdminApi
 from tinydb import TinyDB
 
 load_dotenv()
@@ -16,7 +18,10 @@ if not os.path.exists(data_path):
 app = Flask(__name__)
 db = TinyDB(os.path.join(data_path, "vertex.json"))
 
+admin_manager = AdminManager(db.table("admins"))
+
 HealthApi(app, vertex_description).register()
+AdminApi(app, admin_manager).register()
 
 @app.before_request
 def before_request():
