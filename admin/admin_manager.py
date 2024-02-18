@@ -50,6 +50,22 @@ class AdminManager:
         if not admin:
             raise Exception(f"Admin {username} not found")
         return self.to_dict(admin)
+    
+    def change_password(self, username: str, password: str) -> Dict:
+        fields = {
+            "password": bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
+            "updated_at": time()
+        }
+
+        query = Query()
+        updates = self.table.update(fields, query.username == username)
+        
+        if len(updates) == 0:
+            raise Exception("Admin not found")
+        
+        return {
+            "username": username
+        }
 
     @staticmethod
     def to_dict(self) -> Dict:
