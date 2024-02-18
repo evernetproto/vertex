@@ -1,12 +1,16 @@
 import traceback
-import sys
 from flask import Flask, request, g
 from dotenv import load_dotenv
 import os
+from tinydb import TinyDB
+
 from admin.admin_manager import AdminManager
+from node.node_manager import NodeManager
+
 from health.health_api import HealthApi
 from admin.admin_api import AdminApi
-from tinydb import TinyDB
+from node.node_api import NodeApi
+
 
 load_dotenv()
 
@@ -21,9 +25,11 @@ app = Flask(__name__)
 db = TinyDB(os.path.join(data_path, "vertex.json"))
 
 admin_manager = AdminManager(db.table("admins"), vertex, jwt_signing_key)
+node_manager = NodeManager(db.table("nodes"))
 
 HealthApi(app, vertex_description).register()
 AdminApi(app, admin_manager).register()
+NodeApi(app, node_manager).register()
 
 @app.before_request
 def before_request():
