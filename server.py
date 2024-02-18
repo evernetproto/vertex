@@ -18,7 +18,7 @@ if not os.path.exists(data_path):
 app = Flask(__name__)
 db = TinyDB(os.path.join(data_path, "vertex.json"))
 
-admin_manager = AdminManager(db.table("admins"))
+admin_manager = AdminManager(db.table("admins"), vertex, jwt_signing_key)
 
 HealthApi(app, vertex_description).register()
 AdminApi(app, admin_manager).register()
