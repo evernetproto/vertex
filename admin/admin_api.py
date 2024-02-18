@@ -15,3 +15,10 @@ class AdminApi:
                 required_param("username"),
                 required_param("password")
             )
+
+        @self.app.post("/api/v1/admins/token")
+        def get_admin_token():
+            return self.manager.get_token(
+                required_param("username"),
+                required_param("password")
+            )
