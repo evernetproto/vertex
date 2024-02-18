@@ -3,3 +3,4 @@ python-dotenv
 tinydb
 bcrypt
 PyJWT
+cryptography
