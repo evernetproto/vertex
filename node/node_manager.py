@@ -1,6 +1,6 @@
 from tinydb.table import Table
 from tinydb import Query
-from typing import Dict
+from typing import Dict, List
 from time import time
 from utils.ed25519 import Ed25519
 
@@ -33,8 +33,12 @@ class NodeManager:
             "signing_public_key": signing_pubic_key
         }
 
-    def list():
-        pass
+    def list(self) -> List:
+        nodes = self.table.all()
+        results = []
+        for node in nodes:
+            results.append(self.to_dict(node))
+        return results
 
     def get():
         pass
@@ -54,3 +58,15 @@ class NodeManager:
     def identifier_exists(self, identifier: str):
         query = Query()
         return self.table.contains(query.identifier == identifier)
+
+    @staticmethod
+    def to_dict(self) -> Dict:
+        return {
+            "identifier": self["identifier"],
+            "display_name": self["display_name"],
+            "description": self["description"],
+            "signing_public_key": self["signing_public_key"],
+            "creator": self["creator"],
+            "created_at": self["created_at"],
+            "updated_at": self["updated_at"]
+        }

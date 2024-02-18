@@ -20,3 +20,7 @@ class NodeApi:
                 required_param("actor_sign_up_enabled", bool),
                 admin["username"]
             )
+
+        @self.app.get("/api/v1/nodes")
+        def list_nodes():
+            return self.manager.list()
