@@ -47,3 +47,8 @@ class AdminApi:
         @authenticate_admin
         def get_admin(_, username):
             return self.manager.get(username)
+
+        @self.app.put("/api/v1/admins/<username>/password")
+        @authenticate_admin
+        def reset_admin_password(_, username):
+            return self.manager.reset_password(username)

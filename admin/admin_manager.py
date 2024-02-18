@@ -95,6 +95,17 @@ class AdminManager:
         for admin in admins:
             results.append(self.to_dict(admin))
         return results
+    
+    def reset_password(self, username: str) -> Dict:
+        password = self.password_generator.generate()
+        self.change_password(username, password)
+        return {
+            "username": username,
+            "password": password
+        }
+
+    def delete():
+        pass
 
     def username_exists(self, username: str) -> bool:
         query = Query()
