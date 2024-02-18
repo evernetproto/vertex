@@ -104,8 +104,16 @@ class AdminManager:
             "password": password
         }
 
-    def delete():
-        pass
+    def delete(self, username: str) -> Dict:
+        query = Query()
+        deletes = self.table.remove(query.username == username)
+
+        if len(deletes) == 0:
+            raise Exception(f"Admin {username} not found")
+        
+        return {
+            "username": username
+        }
 
     def username_exists(self, username: str) -> bool:
         query = Query()
