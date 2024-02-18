@@ -35,3 +35,9 @@ class NodeApi:
             return self.manager.update(identifier,
                                        optional_param("display_name"),
                                        optional_param("description"))
+
+        @self.app.put("/api/v1/nodes/<identifier>/actor-sign-up-enabled")
+        @authenticate_admin
+        def change_node_actor_sign_up_enabled(_, identifier):
+            return self.manager.change_actor_sign_up_enabled(identifier,
+                                                             required_param("actor_sign_up_enabled", bool))

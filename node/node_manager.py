@@ -66,8 +66,21 @@ class NodeManager:
             "identifier": identifier
         }
 
-    def change_actor_sign_up_enabled():
-        pass
+    def change_actor_sign_up_enabled(self, identifier: str, actor_sign_up_enabled: bool) -> Dict:
+        fields = {
+            "actor_sign_up_enabled": actor_sign_up_enabled,
+            "updated_at": time()
+        }
+        
+        query = Query()
+        results = self.table.update(fields, query.identifier == identifier)
+        
+        if len(results) == 0:
+            raise Exception(f"Node {identifier} not found")
+        
+        return {
+            "identifier": identifier
+        }
 
     def reset_signing_keys():
         pass
@@ -86,6 +99,7 @@ class NodeManager:
             "display_name": self["display_name"],
             "description": self["description"],
             "signing_public_key": self["signing_public_key"],
+            "actor_sign_up_enabled": self["actor_sign_up_enabled"],
             "creator": self["creator"],
             "created_at": self["created_at"],
             "updated_at": self["updated_at"]
