@@ -47,8 +47,24 @@ class NodeManager:
             raise Exception(f"Node {identifier} not found")
         return self.to_dict(node)
 
-    def update():
-        pass
+    def update(self, identifier: str, display_name: str, description: str):
+        fields = {
+            "updated_at": time(),
+            "description": description
+        }
+
+        if display_name:
+            fields["display_name"] = display_name
+
+        query = Query()
+        results = self.table.update(fields, query.identifier == identifier)
+        
+        if len(results) == 0:
+            raise Exception(f"Node {identifier} not found")
+        
+        return {
+            "identifier": identifier
+        }
 
     def change_actor_sign_up_enabled():
         pass
