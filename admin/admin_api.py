@@ -42,3 +42,8 @@ class AdminApi:
         @authenticate_admin
         def list_admins(_):
             return self.manager.list()
+
+        @self.app.get("/api/v1/admins/<username>")
+        @authenticate_admin
+        def get_admin(_, username):
+            return self.manager.get(username)
