@@ -4,3 +4,4 @@ tinydb
 bcrypt
 PyJWT
 cryptography
+random-password-generator

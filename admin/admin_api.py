@@ -32,3 +32,8 @@ class AdminApi:
         @authenticate_admin
         def update_current_admin_password(admin):
             return self.manager.change_password(admin["username"], required_param("password"))
+
+        @self.app.post("/api/v1/admins")
+        @authenticate_admin
+        def add_admin(admin):
+            return self.manager.add(required_param("username"), admin["username"])
