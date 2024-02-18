@@ -49,7 +49,7 @@ class AdminManager:
         admin = self.table.get(query.username == username)
         if not admin:
             raise Exception(f"Admin {username} not found")
-        return self.to_dict(username)
+        return self.to_dict(admin)
 
     @staticmethod
     def to_dict(self) -> Dict:

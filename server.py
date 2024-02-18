@@ -1,3 +1,5 @@
+import traceback
+import sys
 from flask import Flask, request, g
 from dotenv import load_dotenv
 import os
@@ -40,6 +42,7 @@ def handle_404_error(e):
 
 @app.errorhandler(Exception)
 def handle_all_errors(e):
+    print(traceback.format_exc())
     return {
         "success": False,
         "message": str(e)
