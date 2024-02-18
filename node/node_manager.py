@@ -82,8 +82,26 @@ class NodeManager:
             "identifier": identifier
         }
 
-    def reset_signing_keys():
-        pass
+    def reset_signing_keys(self, identifier: str) -> Dict:
+        signing_key = Ed25519.generate()
+        signing_pubic_key = Ed25519.encode_public_key(signing_key.public_key())
+
+        fields = {
+            "updated_at": time(),
+            "signing_public_key": signing_pubic_key,
+            "signing_private_key": Ed25519.encode_private_key(signing_key)
+        }
+
+        query = Query()
+        results = self.table.update(fields, query.identifier == identifier)
+        
+        if len(results) == 0:
+            raise Exception(f"Node {identifier} not found")
+        
+        return {
+            "identifier": identifier,
+            "signing_public_key": signing_pubic_key
+        }
 
     def delete():
         pass

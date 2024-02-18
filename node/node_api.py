@@ -41,3 +41,8 @@ class NodeApi:
         def change_node_actor_sign_up_enabled(_, identifier):
             return self.manager.change_actor_sign_up_enabled(identifier,
                                                              required_param("actor_sign_up_enabled", bool))
+
+        @self.app.put("/api/v1/nodes/<identifier>/signing-key")
+        @authenticate_admin
+        def reset_node_signing_key(_, identifier):
+            return self.manager.reset_signing_keys(identifier)
