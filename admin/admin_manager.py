@@ -88,6 +88,14 @@ class AdminManager:
             "password": password
         }
 
+    def list(self) -> List:
+        admins = self.table.all()
+
+        results = []
+        for admin in admins:
+            results.append(self.to_dict(admin))
+        return results
+
     def username_exists(self, username: str) -> bool:
         query = Query()
         return self.table.contains(query.username == username)

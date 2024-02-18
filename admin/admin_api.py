@@ -37,3 +37,8 @@ class AdminApi:
         @authenticate_admin
         def add_admin(admin):
             return self.manager.add(required_param("username"), admin["username"])
+
+        @self.app.get("/api/v1/admins")
+        @authenticate_admin
+        def list_admins(_):
+            return self.manager.list()
