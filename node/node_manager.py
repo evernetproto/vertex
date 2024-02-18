@@ -103,8 +103,14 @@ class NodeManager:
             "signing_public_key": signing_pubic_key
         }
 
-    def delete():
-        pass
+    def delete(self, identifier: str) -> Dict:
+        query = Query()
+        deleted = self.table.remove(query.identifier == identifier)
+        if len(deleted) == 0:
+            raise Exception(f"Node {identifier} not found")
+        return {
+            "identifier": identifier
+        }
 
     def identifier_exists(self, identifier: str):
         query = Query()
