@@ -30,3 +30,8 @@ class ActorApi:
                 optional_param("target_node_address")
             )
     
+        @self.app.get("/api/v1/nodes/<node_identifier>/actors/current")
+        @authenticate_actor
+        def get_current_actor_details(actor, node_identifier):
+            validate_actor_is_local(actor, node_identifier)
+            return self.manager.get(actor["identifier"], node_identifier)

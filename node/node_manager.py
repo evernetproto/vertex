@@ -55,6 +55,9 @@ class NodeManager:
             raise Exception(f"Node {identifier} not found")
         
         return Ed25519.decode_private_key(node["signing_private_key"])
+    
+    def get_signing_public_key(self, identifier: str) -> ed25519.Ed25519PublicKey:
+        return Ed25519.decode_public_key(self.get(identifier)["signing_public_key"])
 
     def update(self, identifier: str, display_name: str, description: str):
         fields = {

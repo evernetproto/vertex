@@ -40,6 +40,7 @@ def before_request():
     g.request_body = request.get_json(force=True, silent=True)
     g.jwt_signing_key = jwt_signing_key
     g.vertex = vertex
+    g.node_manager = node_manager
 
 
 @app.errorhandler(404)

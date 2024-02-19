@@ -58,9 +58,33 @@ class ActorManager:
                     "iss": node_address,
                     "aud": target_node_address,
                     "iat": int(time())
+            }, headers={
+                "kid": node_address
             }, key=node_signing_private_key, algorithm="EdDSA")
         }
+    
+    def get(self, identifier: str, node_identifier: str) -> Dict:
+        query = Query()
+        actor = self.table.get((query.identifier == identifier) & (query.node_identifier == node_identifier))
 
-    def identifier_exists(self, identifier: str, node_identifier: str):
+        if not actor:
+            raise Exception(f"Actor {identifier} not found on node {node_identifier}")
+
+        return self.to_dict(actor)
+
+    def identifier_exists(self, identifier: str, node_identifier: str) -> bool:
         query = Query()
         return self.table.contains((query.identifier == identifier) & (query.node_identifier == node_identifier))
+
+    @staticmethod
+    def to_dict(self):
+        return {
+            "identifier": self["identifier"],
+            "node_identifier": self["node_identifier"],
+            "type": self["type"],
+            "display_name": self["display_name"],
+            "description": self["description"],
+            "creator": self["creator"],
+            "created_at": self["created_at"],
+            "updated_at": self["updated_at"]
+        }

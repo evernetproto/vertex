@@ -74,7 +74,7 @@ def resolve_kid(kid: str):
     node = components[1]
 
     if vertex == g.vertex:
-        public_key = g.node_service.get_signing_public_key(node)
+        public_key = g.node_manager.get_signing_public_key(node)
         return {
             "public_key": public_key,
             "node_identifier": node,
@@ -126,9 +126,13 @@ def authenticate_actor(f):
                 "vertex": source_vertex,
                 "node_address": f"{source_vertex}/{source_node_identifier}"
             }
-        except Exception as _:
+        except Exception as e:
             raise Exception("Invalid access token")
 
         return f(current_actor, *args, **kwargs)
 
     return decorated
+
+def validate_actor_is_local(actor, node_identifier):
+    if actor["vertex"] != g.vertex and actor["node_identifier"] != node_identifier:
+        raise Exception("Not allowed")
