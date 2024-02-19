@@ -92,11 +92,17 @@ class ActorManager:
             "identifier": identifier
         }
     
-    def change_password():
+    def change_password(self, identifier: str, password: str, node_identifier: str) -> Dict:
         pass
 
-    def delete():
-        pass
+    def delete(self, identifier: str, node_identifier: str) -> Dict:
+        query = Query()
+        deletes = self.table.remove((query.identifier == identifier & query.node_identifier == node_identifier))
+        if len(deletes) == 0:
+            raise Exception(f"Actor {identifier} not found on node {node_identifier}")
+        return {
+            "identifier": identifier
+        }
 
     def identifier_exists(self, identifier: str, node_identifier: str) -> bool:
         query = Query()
