@@ -35,3 +35,13 @@ class ActorApi:
         def get_current_actor_details(actor, node_identifier):
             validate_actor_is_local(actor, node_identifier)
             return self.manager.get(actor["identifier"], node_identifier)
+
+        @self.app.put("/api/v1/nodes/<node_identifier>/actors/current")
+        @authenticate_actor
+        def update_current_actor_details(actor, node_identifier):
+            validate_actor_is_local(actor, node_identifier)
+            return self.manager.update(actor["identifier"],
+                                       optional_param("display_name"),
+                                       optional_param("description"),
+                                       optional_param("type"),
+                                       node_identifier)

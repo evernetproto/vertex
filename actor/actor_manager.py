@@ -71,6 +71,32 @@ class ActorManager:
             raise Exception(f"Actor {identifier} not found on node {node_identifier}")
 
         return self.to_dict(actor)
+    
+    def update(self, identifier: str, display_name: str, description: str, actor_type: str, node_identifier: str):
+        fields = {
+            "description": description
+        }
+
+        if not display_name:
+            fields["display_name"] = display_name
+        if not actor_type:
+            fields["type"] = actor_type
+        
+        query = Query()
+        updates = self.table.update(fields, (query.identifier == identifier) & (query.node_identifier == node_identifier))
+
+        if len(updates) == 0:
+            raise Exception(f"Actor {identifier} not found on node {node_identifier}")
+
+        return {
+            "identifier": identifier
+        }
+    
+    def change_password():
+        pass
+
+    def delete():
+        pass
 
     def identifier_exists(self, identifier: str, node_identifier: str) -> bool:
         query = Query()
