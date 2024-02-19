@@ -20,3 +20,13 @@ class ActorApi:
                 required_param("display_name"),
                 optional_param("description")
             )
+
+        @self.app.post("/api/v1/nodes/<node_identifier>/actors/token")
+        def get_actor_token(node_identifier):
+            return self.manager.get_token(
+                required_param("identifier"),
+                required_param("password"),
+                node_identifier,
+                optional_param("target_node_address")
+            )
+    

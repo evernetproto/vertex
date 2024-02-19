@@ -28,7 +28,7 @@ db = TinyDB(os.path.join(data_path, "vertex.json"))
 
 admin_manager = AdminManager(db.table("admins"), vertex, jwt_signing_key)
 node_manager = NodeManager(db.table("nodes"))
-actor_manager = ActorManager(db.table("actors"), node_manager)
+actor_manager = ActorManager(db.table("actors"), node_manager, vertex)
 
 HealthApi(app, vertex_description).register()
 AdminApi(app, admin_manager).register()

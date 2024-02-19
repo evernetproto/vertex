@@ -2,6 +2,7 @@ from tinydb.table import Table
 from tinydb import Query
 from typing import Dict, List
 from time import time
+from cryptography.hazmat.primitives.asymmetric import ed25519
 from utils.ed25519 import Ed25519
 
 
@@ -46,6 +47,14 @@ class NodeManager:
         if not node:
             raise Exception(f"Node {identifier} not found")
         return self.to_dict(node)
+    
+    def get_signing_private_key(self, identifier: str) -> ed25519.Ed25519PrivateKey:
+        query = Query()
+        node = self.table.get(query.identifier == identifier)
+        if not node:
+            raise Exception(f"Node {identifier} not found")
+        
+        return Ed25519.decode_private_key(node["signing_private_key"])
 
     def update(self, identifier: str, display_name: str, description: str):
         fields = {

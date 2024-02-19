@@ -1,14 +1,17 @@
 from tinydb.table import Table
 from tinydb import Query
 import bcrypt
+import jwt
 from time import time
+from typing import Dict, List
 from node.node_manager import NodeManager
 
 
 class ActorManager:
-    def __init__(self, table: Table, node_manager: NodeManager) -> None:
+    def __init__(self, table: Table, node_manager: NodeManager, vertex: str) -> None:
         self.node_manager = node_manager
         self.table = table
+        self.vertex = vertex
 
     def sign_up(self, node_identifier: str, identifier: str, password: str, actor_type: str, display_name: str, description: str):
         node = self.node_manager.get(node_identifier)
@@ -33,6 +36,29 @@ class ActorManager:
 
         return {
             "identifier": identifier
+        }
+
+    def get_token(self, identifier: str, password: str, node_identifier: str, target_node_address: str) -> Dict:
+        node_signing_private_key = self.node_manager.get_signing_private_key(node_identifier)
+        
+        query = Query()
+        user = self.table.get((query.identifier == identifier) & (query.node_identifier == node_identifier))
+        
+        if not user or not bcrypt.checkpw(password.encode("utf-8"), user["password"].encode("utf-8")):
+            raise Exception("Invalid identifier and password combination")
+        
+        node_address = f"{self.vertex}/{node_identifier}"
+        if not target_node_address:
+            target_node_address = node_address
+        
+        return {
+            "token": jwt.encode({
+                    "sub": identifier,
+                    "type": "actor",
+                    "iss": node_address,
+                    "aud": target_node_address,
+                    "iat": int(time())
+            }, key=node_signing_private_key, algorithm="EdDSA")
         }
 
     def identifier_exists(self, identifier: str, node_identifier: str):
