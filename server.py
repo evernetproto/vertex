@@ -6,10 +6,12 @@ from tinydb import TinyDB
 
 from admin.admin_manager import AdminManager
 from node.node_manager import NodeManager
+from actor.actor_manager import ActorManager
 
 from health.health_api import HealthApi
 from admin.admin_api import AdminApi
 from node.node_api import NodeApi
+from actor.actor_api import ActorApi
 
 
 load_dotenv()
@@ -26,10 +28,12 @@ db = TinyDB(os.path.join(data_path, "vertex.json"))
 
 admin_manager = AdminManager(db.table("admins"), vertex, jwt_signing_key)
 node_manager = NodeManager(db.table("nodes"))
+actor_manager = ActorManager(db.table("actors"), node_manager)
 
 HealthApi(app, vertex_description).register()
 AdminApi(app, admin_manager).register()
 NodeApi(app, node_manager).register()
+ActorApi(app, actor_manager).register()
 
 @app.before_request
 def before_request():
