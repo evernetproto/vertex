@@ -4,6 +4,7 @@ import bcrypt
 import jwt
 from time import time
 from typing import Dict, List
+from password_generator import PasswordGenerator
 from node.node_manager import NodeManager
 
 
@@ -12,6 +13,7 @@ class ActorManager:
         self.node_manager = node_manager
         self.table = table
         self.vertex = vertex
+        self.password_generator = PasswordGenerator()
 
     def sign_up(self, node_identifier: str, identifier: str, password: str, actor_type: str, display_name: str, description: str):
         node = self.node_manager.get(node_identifier)
@@ -95,7 +97,7 @@ class ActorManager:
     def change_password(self, identifier: str, password: str, node_identifier: str) -> Dict:
         fields = {
             "updated_at": time(),
-            "password": bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+            "password": bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
         }
 
         query = Query()
@@ -117,6 +119,33 @@ class ActorManager:
         return {
             "identifier": identifier
         }
+
+    def add(self, node_identifier: str, identifier: str, password: str, actor_type: str, display_name: str, description: str, creator: str) -> Dict:
+        if not self.node_manager.identifier_exists(node_identifier):
+            raise Exception(f"Node {node_identifier} not found")
+
+        if self.identifier_exists(identifier, node_identifier):
+            raise Exception(f"Actor {identifier} already exists on node {node_identifier}")
+        
+        self.table.insert({
+            "node_identifier": node_identifier,
+            "identifier": identifier,
+            "password": bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
+            "type": actor_type,
+            "display_name": display_name,
+            "description": description,
+            "creator": creator,
+            "created_at": time(),
+            "updated_at": time() 
+        })
+
+        return {
+            "identifier": identifier
+        }
+
+    def reset_password(self, identifier: str, node_identifier: str) -> Dict:
+        password = self.password_generator.generate()
+        return self.change_password(identifier, password, node_identifier)
 
     def identifier_exists(self, identifier: str, node_identifier: str) -> bool:
         query = Query()

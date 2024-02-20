@@ -59,3 +59,33 @@ class ActorApi:
         def delete_current_actor(actor, node_identifier):
             validate_actor_is_local(actor, node_identifier)
             return self.manager.delete(actor["identifier"], node_identifier)
+
+        @self.app.post("/api/v1/nodes/<node_identifier>/actors")
+        @authenticate_admin
+        def add_actor(admin, node_identifier):
+            return self.manager.add(node_identifier,
+                                    required_param("identifier"),
+                                    required_param("password"),
+                                    required_param("type"),
+                                    required_param("display_name"),
+                                    optional_param("description"),
+                                    admin["username"])
+
+        @self.app.delete("/api/v1/nodes/<node_identifier>/actors/<identifier>")
+        @authenticate_admin
+        def delete_actor(_, node_identifier, identifier):
+            return self.manager.delete(identifier, node_identifier)
+
+        @self.app.put("/api/v1/nodes/<node_identifier>/actors/<identifier>/password")
+        @authenticate_admin
+        def reset_actor_password(_, node_identifier, identifier):
+            return self.manager.reset_password(identifier, node_identifier)
+        
+        @self.app.put("/api/v1/nodes/<node_identifier>/actors/<identifier>")
+        @authenticate_admin
+        def update_actor(_, node_identifier, identifier):
+            return self.manager.update(identifier,
+                                       optional_param("display_name"),
+                                       optional_param("description"),
+                                       optional_param("type"),
+                                       node_identifier)
