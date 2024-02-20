@@ -120,13 +120,15 @@ class ActorManager:
             "identifier": identifier
         }
 
-    def add(self, node_identifier: str, identifier: str, password: str, actor_type: str, display_name: str, description: str, creator: str) -> Dict:
+    def add(self, node_identifier: str, identifier: str, actor_type: str, display_name: str, description: str, creator: str) -> Dict:
         if not self.node_manager.identifier_exists(node_identifier):
             raise Exception(f"Node {node_identifier} not found")
 
         if self.identifier_exists(identifier, node_identifier):
             raise Exception(f"Actor {identifier} already exists on node {node_identifier}")
-        
+
+        password = self.password_generator.generate()
+
         self.table.insert({
             "node_identifier": node_identifier,
             "identifier": identifier,
@@ -140,7 +142,8 @@ class ActorManager:
         })
 
         return {
-            "identifier": identifier
+            "identifier": identifier,
+            "password": password
         }
 
     def reset_password(self, identifier: str, node_identifier: str) -> Dict:

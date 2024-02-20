@@ -65,7 +65,6 @@ class ActorApi:
         def add_actor(admin, node_identifier):
             return self.manager.add(node_identifier,
                                     required_param("identifier"),
-                                    required_param("password"),
                                     required_param("type"),
                                     required_param("display_name"),
                                     optional_param("description"),
