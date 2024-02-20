@@ -45,6 +45,14 @@ class ActorApi:
                                        optional_param("description"),
                                        optional_param("type"),
                                        node_identifier)
+        
+        @self.app.put("/api/v1/nodes/<node_identifier>/actors/current/password")
+        @authenticate_actor
+        def change_current_actor_password(actor, node_identifier):
+            validate_actor_is_local(actor, node_identifier)
+            return self.manager.change_password(actor["identifier"],
+                                                required_param("password"),
+                                                node_identifier)
 
         @self.app.delete("/api/v1/nodes/<node_identifier>/actors/current")
         @authenticate_actor

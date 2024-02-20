@@ -93,7 +93,21 @@ class ActorManager:
         }
     
     def change_password(self, identifier: str, password: str, node_identifier: str) -> Dict:
-        pass
+        fields = {
+            "updated_at": time(),
+            "password": bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+        }
+
+        query = Query()
+
+        updates = self.table.update(fields, (query.identifier == identifier) & (query.node_identifier == node_identifier))
+        
+        if len(updates) == 0:
+            raise Exception(f"Actor {identifier} not found on node {node_identifier}")
+        
+        return {
+            "identifier": identifier
+        }
 
     def delete(self, identifier: str, node_identifier: str) -> Dict:
         query = Query()
